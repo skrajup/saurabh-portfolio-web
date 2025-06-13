@@ -1,11 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IST Digital Clock</title>
+  <style>
+    body {
+      background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .clock {
+      font-size: 5rem;
+      color: #00fff7;
+      text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7, 0 0 60px #00fff7;
+      border: 2px solid #00fff7;
+      padding: 30px 60px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px #00fff7 inset;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+    }
+
+    .label {
+      font-size: 1rem;
+      text-align: center;
+      color: #ffffffcc;
+      margin-top: 10px;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+  </style>
+</head>
 <body>
 
-<h1>My First Heading</h1>
+  <div>
+    <div class="clock" id="clock">--:--:--</div>
+<!--     <div class="label">Time in IST (24-hour format)</div> -->
+  </div>
 
-<p>My first paragraph.</p>
+  <script>
+    function updateISTClock() {
+      const nowUTC = new Date();
+
+      // IST is UTC + 5:30
+      const istOffset = 5.5 * 60; // in minutes
+      const localOffset = nowUTC.getTimezoneOffset(); // local offset from UTC in minutes
+      const istTime = new Date(nowUTC.getTime() + (istOffset + localOffset) * 60000);
+
+      const hours = String(istTime.getHours()).padStart(2, '0');
+      const minutes = String(istTime.getMinutes()).padStart(2, '0');
+      const seconds = String(istTime.getSeconds()).padStart(2, '0');
+
+      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    // Update every second
+    setInterval(updateISTClock, 1000);
+    updateISTClock(); // initial call
+  </script>
 
 </body>
 </html>
-
