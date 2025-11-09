@@ -39,6 +39,24 @@
             margin-bottom: 10px;
         }
 
+        .sync-status {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .sync-status.syncing {
+            color: #ffd700;
+        }
+
+        .sync-status.synced {
+            color: #90EE90;
+        }
+
+        .sync-status.error {
+            color: #ffcccb;
+        }
+
         .stats {
             display: flex;
             justify-content: space-around;
@@ -242,12 +260,30 @@
         .clear-all:hover {
             background: #da190b;
         }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>📝 My Tasks</h1>
+            <div class="sync-status" id="syncStatus">🔄 Syncing...</div>
             <div class="stats">
                 <span>Total: <strong id="totalTasks">0</strong></span>
                 <span>Active: <strong id="activeTasks">0</strong></span>
@@ -267,7 +303,9 @@
             </div>
         </div>
 
-        <div class="tasks-container" id="tasksContainer"></div>
+        <div class="tasks-container" id="tasksContainer">
+            <div class="loading">Loading tasks</div>
+        </div>
 
         <button class="clear-all" id="clearCompleted">Clear Completed Tasks</button>
     </div>
@@ -276,17 +314,61 @@
         let tasks = [];
         let currentFilter = 'all';
         let editingId = null;
+        const STORAGE_KEY = 'user-tasks';
 
-        // Load tasks from localStorage
-        function loadTasks() {
-            const stored = localStorage.getItem('tasks');
-            tasks = stored ? JSON.parse(stored) : [];
-            renderTasks();
+        // Update sync status
+        function updateSyncStatus(status, message) {
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.className = 'sync-status ' + status;
+            
+            const icons = {
+                syncing: '🔄',
+                synced: '✓',
+                error: '⚠️'
+            };
+            
+            statusEl.textContent = `${icons[status]} ${message}`;
         }
 
-        // Save tasks to localStorage
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
+        // Load tasks from cloud storage
+        async function loadTasks() {
+            try {
+                updateSyncStatus('syncing', 'Loading tasks...');
+                
+                const result = await window.storage.get(STORAGE_KEY, true);
+                
+                if (result && result.value) {
+                    tasks = JSON.parse(result.value);
+                } else {
+                    tasks = [];
+                }
+                
+                renderTasks();
+                updateSyncStatus('synced', 'Synced across devices');
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                tasks = [];
+                renderTasks();
+                updateSyncStatus('error', 'Failed to load tasks');
+            }
+        }
+
+        // Save tasks to cloud storage
+        async function saveTasks() {
+            try {
+                updateSyncStatus('syncing', 'Syncing...');
+                
+                const result = await window.storage.set(STORAGE_KEY, JSON.stringify(tasks), true);
+                
+                if (result) {
+                    updateSyncStatus('synced', 'Synced across devices');
+                } else {
+                    updateSyncStatus('error', 'Sync failed');
+                }
+            } catch (error) {
+                console.error('Error saving tasks:', error);
+                updateSyncStatus('error', 'Sync failed');
+            }
         }
 
         // Add new task
@@ -445,6 +527,24 @@
             if (e.key === 'Enter') addTask();
         });
         document.getElementById('clearCompleted').addEventListener('click', clearCompleted);
+
+        // Auto-sync every 30 seconds to check for updates from other devices
+        setInterval(async () => {
+            try {
+                const result = await window.storage.get(STORAGE_KEY, true);
+                if (result && result.value) {
+                    const cloudTasks = JSON.parse(result.value);
+                    // Only update if cloud data is different
+                    if (JSON.stringify(cloudTasks) !== JSON.stringify(tasks)) {
+                        tasks = cloudTasks;
+                        renderTasks();
+                        updateSyncStatus('synced', 'Synced from other device');
+                    }
+                }
+            } catch (error) {
+                console.error('Auto-sync error:', error);
+            }
+        }, 30000);
 
         // Initialize
         loadTasks();
