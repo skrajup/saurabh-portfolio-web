@@ -1,465 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo Task Manager</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>IST Digital Clock</title>
+  <style>
+    body {
+      background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+    .clock {
+      font-size: 5rem;
+      color: #00fff7;
+      text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7, 0 0 60px #00fff7;
+      border: 2px solid #00fff7;
+      padding: 30px 60px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px #00fff7 inset;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
+    #text {
+      color: #00fff7;
+      text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7, 0 0 60px #00fff7;
+    }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
+    .label {
+      font-size: 1rem;
+      text-align: center;
+      color: #ffffffcc;
+      margin-top: 10px;
+    }
 
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 0.95em;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 15px;
-            font-size: 0.9em;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .info-banner {
-            background: #e3f2fd;
-            padding: 20px;
-            border-bottom: 1px solid #90caf9;
-        }
-
-        .info-banner h3 {
-            color: #1565c0;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-
-        .info-banner p {
-            color: #1976d2;
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
-
-        .info-banner code {
-            background: white;
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: #d32f2f;
-            font-family: 'Courier New', monospace;
-        }
-
-        .filters {
-            padding: 20px 30px;
-            display: flex;
-            gap: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .filter-btn {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid #ddd;
-            background: white;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.95em;
-        }
-
-        .filter-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .tasks-container {
-            padding: 20px 30px;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .task-item {
-            background: #f8f9fa;
-            padding: 18px;
-            margin-bottom: 12px;
-            border-radius: 8px;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            transition: all 0.3s;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .task-item:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .task-item.completed {
-            opacity: 0.6;
-            background: #e9ecef;
-        }
-
-        .task-item.completed .task-text {
-            text-decoration: line-through;
-            color: #999;
-        }
-
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            accent-color: #667eea;
-            margin-top: 2px;
-        }
-
-        .task-content {
-            flex: 1;
-        }
-
-        .task-text {
-            font-size: 1.05em;
-            color: #333;
-            margin-bottom: 5px;
-            word-break: break-word;
-        }
-
-        .task-meta {
-            font-size: 0.85em;
-            color: #666;
-        }
-
-        .priority-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.75em;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-
-        .priority-high {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .priority-medium {
-            background: #fff3e0;
-            color: #ef6c00;
-        }
-
-        .priority-low {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-
-        .empty-state svg {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 10px;
-            color: #666;
-        }
-
-        .actions {
-            padding: 20px 30px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.95em;
-            transition: all 0.3s;
-        }
-
-        .refresh-btn {
-            background: #2196F3;
-            color: white;
-        }
-
-        .clear-btn {
-            background: #f44336;
-            color: white;
-        }
-
-        .action-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 15px;
-            margin: 20px 30px;
-            border-radius: 8px;
-            border-left: 4px solid #c62828;
-        }
-    </style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📋 My Todo Tasks</h1>
-            <p>Edit tasks.txt file to manage your tasks</p>
-            <div class="stats">
-                <span>Total: <strong id="totalTasks">0</strong></span>
-                <span>Active: <strong id="activeTasks">0</strong></span>
-                <span>Completed: <strong id="completedTasks">0</strong></span>
-            </div>
-        </div>
 
-        <div class="info-banner">
-            <h3>📝 How to add/edit tasks:</h3>
-            <p>1. Edit the <code>tasks.txt</code> file in the same folder as this HTML file</p>
-            <p>2. Write one task per line</p>
-            <p>3. Mark completed tasks with <code>[x]</code> at the start</p>
-            <p>4. Mark priority: <code>!!!</code> = High, <code>!!</code> = Medium, <code>!</code> = Low</p>
-            <p>5. Reload this page or click "Refresh Tasks" to see updates</p>
-            <p><strong>Example:</strong> <code>[x] Buy groceries !!!</code></p>
-        </div>
+  <div>
+    <div id="text">Digital Clock</div>
+    <div class="clock" id="clock">--:--:--</div>
+<!--     <div class="label">Time in IST (24-hour format)</div> -->
+  </div>
 
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all">All Tasks</button>
-            <button class="filter-btn" data-filter="active">Active</button>
-            <button class="filter-btn" data-filter="completed">Completed</button>
-        </div>
+  <script>
+    function updateISTClock() {
+      const nowUTC = new Date();
 
-        <div class="tasks-container" id="tasksContainer">
-            <div class="empty-state">
-                <svg fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                </svg>
-                <h3>Loading tasks...</h3>
-            </div>
-        </div>
+      // IST is UTC + 5:30
+      const istOffset = 5.5 * 60; // in minutes
+      const localOffset = nowUTC.getTimezoneOffset(); // local offset from UTC in minutes
+      const istTime = new Date(nowUTC.getTime() + (istOffset + localOffset) * 60000);
 
-        <div class="actions">
-            <button class="action-btn refresh-btn" onclick="loadTasks()">🔄 Refresh Tasks</button>
-            <button class="action-btn clear-btn" onclick="clearCompleted()">✓ Clear Completed</button>
-        </div>
-    </div>
+      const hours = String(istTime.getHours()).padStart(2, '0');
+      const minutes = String(istTime.getMinutes()).padStart(2, '0');
+      const seconds = String(istTime.getSeconds()).padStart(2, '0');
 
-    <script>
-        let tasks = [];
-        let currentFilter = 'all';
+      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    }
 
-        // Load tasks from tasks.txt file
-        async function loadTasks() {
-            try {
-                const response = await fetch('tasks.txt');
-                
-                if (!response.ok) {
-                    throw new Error('tasks.txt file not found. Please create it in the same folder.');
-                }
-                
-                const content = await response.text();
-                parseTasks(content);
-                renderTasks();
-            } catch (error) {
-                console.error('Error loading tasks:', error);
-                document.getElementById('tasksContainer').innerHTML = `
-                    <div class="error-message">
-                        <strong>⚠️ Error:</strong> ${error.message}
-                        <br><br>
-                        Please create a <strong>tasks.txt</strong> file in the same folder as this HTML file.
-                    </div>
-                `;
-            }
-        }
+    // Update every second
+    setInterval(updateISTClock, 1000);
+    updateISTClock(); // initial call
+  </script>
 
-        // Parse tasks from text content
-        function parseTasks(content) {
-            const lines = content.trim().split('\n').filter(line => line.trim());
-            
-            tasks = lines.map((line, index) => {
-                let text = line.trim();
-                let completed = false;
-                let priority = 'low';
-
-                // Check for completed marker [x] or [X]
-                if (text.match(/^\[x\]/i)) {
-                    completed = true;
-                    text = text.substring(3).trim();
-                } else if (text.startsWith('[ ]')) {
-                    text = text.substring(3).trim();
-                }
-
-                // Check for priority markers
-                if (text.includes('!!!')) {
-                    priority = 'high';
-                    text = text.replace(/!!!/g, '').trim();
-                } else if (text.includes('!!')) {
-                    priority = 'medium';
-                    text = text.replace(/!!/g, '').trim();
-                } else if (text.includes('!')) {
-                    priority = 'low';
-                    text = text.replace(/!/g, '').trim();
-                }
-
-                return {
-                    id: Date.now() + index,
-                    text: text,
-                    completed: completed,
-                    priority: priority,
-                    originalLine: line
-                };
-            });
-        }
-
-        // Toggle task completion
-        function toggleTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                task.completed = !task.completed;
-                renderTasks();
-            }
-        }
-
-        // Clear completed tasks
-        function clearCompleted() {
-            const completedCount = tasks.filter(t => t.completed).length;
-            if (completedCount === 0) {
-                alert('No completed tasks to clear!');
-                return;
-            }
-            
-            if (confirm(`Clear ${completedCount} completed task(s)?`)) {
-                tasks = tasks.filter(t => !t.completed);
-                renderTasks();
-            }
-        }
-
-        // Update statistics
-        function updateStats() {
-            const total = tasks.length;
-            const completed = tasks.filter(t => t.completed).length;
-            const active = total - completed;
-
-            document.getElementById('totalTasks').textContent = total;
-            document.getElementById('activeTasks').textContent = active;
-            document.getElementById('completedTasks').textContent = completed;
-        }
-
-        // Render tasks
-        function renderTasks() {
-            const container = document.getElementById('tasksContainer');
-            
-            let filteredTasks = tasks;
-            if (currentFilter === 'active') {
-                filteredTasks = tasks.filter(t => !t.completed);
-            } else if (currentFilter === 'completed') {
-                filteredTasks = tasks.filter(t => t.completed);
-            }
-
-            if (filteredTasks.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                        </svg>
-                        <h3>No ${currentFilter !== 'all' ? currentFilter : ''} tasks</h3>
-                        <p>${tasks.length === 0 ? 'Add tasks to tasks.txt file' : 'Try a different filter'}</p>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = filteredTasks.map(task => `
-                    <div class="task-item ${task.completed ? 'completed' : ''}">
-                        <input 
-                            type="checkbox" 
-                            class="checkbox" 
-                            ${task.completed ? 'checked' : ''} 
-                            onchange="toggleTask(${task.id})"
-                        />
-                        <div class="task-content">
-                            <div class="task-text">${task.text}</div>
-                            <div class="task-meta">
-                                <span class="priority-badge priority-${task.priority}">
-                                    ${task.priority.toUpperCase()}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            updateStats();
-        }
-
-        // Set up filter buttons
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFilter = btn.dataset.filter;
-                renderTasks();
-            });
-        });
-
-        // Load tasks on page load
-        loadTasks();
-
-        // Auto-refresh every 5 seconds to pick up file changes
-        setInterval(loadTasks, 5000);
-    </script>
 </body>
 </html>
