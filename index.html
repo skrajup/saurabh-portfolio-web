@@ -1,74 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>IST Digital Clock</title>
-  <style>
-    body {
-      background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0;
-      font-family: 'Orbitron', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Task Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .clock {
-      font-size: 5rem;
-      color: #00fff7;
-      text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7, 0 0 60px #00fff7;
-      border: 2px solid #00fff7;
-      padding: 30px 60px;
-      border-radius: 15px;
-      box-shadow: 0 0 30px #00fff7 inset;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(5px);
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    #text {
-      color: #00fff7;
-      text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7, 0 0 60px #00fff7;
-    }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
 
-    .label {
-      font-size: 1rem;
-      text-align: center;
-      color: #ffffffcc;
-      margin-top: 10px;
-    }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
 
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-  </style>
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .add-task {
+            padding: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        #taskInput {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        #taskInput:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        #addBtn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #addBtn:hover {
+            transform: translateY(-2px);
+        }
+
+        #addBtn:active {
+            transform: translateY(0);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tasks-container {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 1em;
+            word-break: break-word;
+        }
+
+        .task-text.editing {
+            border: 2px solid #667eea;
+            padding: 5px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .edit-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .save-btn {
+            background: #2196F3;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #9e9e9e;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .clear-all {
+            padding: 15px 25px;
+            margin: 20px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: calc(100% - 40px);
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .clear-all:hover {
+            background: #da190b;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 My Tasks</h1>
+            <div class="stats">
+                <span>Total: <strong id="totalTasks">0</strong></span>
+                <span>Active: <strong id="activeTasks">0</strong></span>
+                <span>Completed: <strong id="completedTasks">0</strong></span>
+            </div>
+        </div>
 
-  <div>
-    <div id="text">Digital Clock</div>
-    <div class="clock" id="clock">--:--:--</div>
-<!--     <div class="label">Time in IST (24-hour format)</div> -->
-  </div>
+        <div class="add-task">
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="What needs to be done?" />
+                <button id="addBtn">Add Task</button>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+        </div>
 
-  <script>
-    function updateISTClock() {
-      const nowUTC = new Date();
+        <div class="tasks-container" id="tasksContainer"></div>
 
-      // IST is UTC + 5:30
-      const istOffset = 5.5 * 60; // in minutes
-      const localOffset = nowUTC.getTimezoneOffset(); // local offset from UTC in minutes
-      const istTime = new Date(nowUTC.getTime() + (istOffset + localOffset) * 60000);
+        <button class="clear-all" id="clearCompleted">Clear Completed Tasks</button>
+    </div>
 
-      const hours = String(istTime.getHours()).padStart(2, '0');
-      const minutes = String(istTime.getMinutes()).padStart(2, '0');
-      const seconds = String(istTime.getSeconds()).padStart(2, '0');
+    <script>
+        let tasks = [];
+        let currentFilter = 'all';
+        let editingId = null;
 
-      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
-    }
+        // Load tasks from localStorage
+        function loadTasks() {
+            const stored = localStorage.getItem('tasks');
+            tasks = stored ? JSON.parse(stored) : [];
+            renderTasks();
+        }
 
-    // Update every second
-    setInterval(updateISTClock, 1000);
-    updateISTClock(); // initial call
-  </script>
+        // Save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
 
+        // Add new task
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const text = input.value.trim();
+            
+            if (text === '') return;
+
+            const task = {
+                id: Date.now(),
+                text: text,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            tasks.unshift(task);
+            input.value = '';
+            saveTasks();
+            renderTasks();
+        }
+
+        // Toggle task completion
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        // Delete task
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            renderTasks();
+        }
+
+        // Start editing task
+        function startEdit(id) {
+            editingId = id;
+            renderTasks();
+        }
+
+        // Save edited task
+        function saveEdit(id, newText) {
+            const task = tasks.find(t => t.id === id);
+            if (task && newText.trim() !== '') {
+                task.text = newText.trim();
+                editingId = null;
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        // Cancel editing
+        function cancelEdit() {
+            editingId = null;
+            renderTasks();
+        }
+
+        // Clear completed tasks
+        function clearCompleted() {
+            tasks = tasks.filter(t => !t.completed);
+            saveTasks();
+            renderTasks();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const active = total - completed;
+
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('activeTasks').textContent = active;
+            document.getElementById('completedTasks').textContent = completed;
+        }
+
+        // Render tasks
+        function renderTasks() {
+            const container = document.getElementById('tasksContainer');
+            
+            let filteredTasks = tasks;
+            if (currentFilter === 'active') {
+                filteredTasks = tasks.filter(t => !t.completed);
+            } else if (currentFilter === 'completed') {
+                filteredTasks = tasks.filter(t => t.completed);
+            }
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                        </svg>
+                        <p>No tasks ${currentFilter !== 'all' ? currentFilter : 'yet'}. Add one above!</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = filteredTasks.map(task => {
+                    const isEditing = editingId === task.id;
+                    
+                    return `
+                        <div class="task-item ${task.completed ? 'completed' : ''}">
+                            <input 
+                                type="checkbox" 
+                                class="checkbox" 
+                                ${task.completed ? 'checked' : ''} 
+                                onchange="toggleTask(${task.id})"
+                                ${isEditing ? 'disabled' : ''}
+                            />
+                            ${isEditing ? `
+                                <input 
+                                    type="text" 
+                                    class="task-text editing" 
+                                    value="${task.text}" 
+                                    id="edit-${task.id}"
+                                    onkeypress="if(event.key==='Enter') saveEdit(${task.id}, this.value)"
+                                />
+                            ` : `
+                                <span class="task-text">${task.text}</span>
+                            `}
+                            <div class="task-actions">
+                                ${isEditing ? `
+                                    <button class="btn save-btn" onclick="saveEdit(${task.id}, document.getElementById('edit-${task.id}').value)">Save</button>
+                                    <button class="btn cancel-btn" onclick="cancelEdit()">Cancel</button>
+                                ` : `
+                                    <button class="btn edit-btn" onclick="startEdit(${task.id})">Edit</button>
+                                    <button class="btn delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            updateStats();
+        }
+
+        // Set up filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderTasks();
+            });
+        });
+
+        // Event listeners
+        document.getElementById('addBtn').addEventListener('click', addTask);
+        document.getElementById('taskInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+        document.getElementById('clearCompleted').addEventListener('click', clearCompleted);
+
+        // Initialize
+        loadTasks();
+    </script>
 </body>
 </html>
