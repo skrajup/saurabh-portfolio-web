@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
@@ -39,22 +39,9 @@
             margin-bottom: 10px;
         }
 
-        .sync-status {
-            font-size: 0.85em;
+        .header p {
             opacity: 0.9;
-            margin-top: 5px;
-        }
-
-        .sync-status.syncing {
-            color: #ffd700;
-        }
-
-        .sync-status.synced {
-            color: #90EE90;
-        }
-
-        .sync-status.error {
-            color: #ffcccb;
+            font-size: 0.95em;
         }
 
         .stats {
@@ -62,65 +49,52 @@
             justify-content: space-around;
             margin-top: 15px;
             font-size: 0.9em;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.3);
         }
 
-        .add-task {
-            padding: 25px;
-            border-bottom: 1px solid #eee;
+        .info-banner {
+            background: #e3f2fd;
+            padding: 20px;
+            border-bottom: 1px solid #90caf9;
         }
 
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+        .info-banner h3 {
+            color: #1565c0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
         }
 
-        #taskInput {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s;
+        .info-banner p {
+            color: #1976d2;
+            line-height: 1.6;
+            margin-bottom: 8px;
         }
 
-        #taskInput:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        #addBtn {
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        #addBtn:hover {
-            transform: translateY(-2px);
-        }
-
-        #addBtn:active {
-            transform: translateY(0);
+        .info-banner code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #d32f2f;
+            font-family: 'Courier New', monospace;
         }
 
         .filters {
+            padding: 20px 30px;
             display: flex;
             gap: 10px;
+            border-bottom: 1px solid #eee;
         }
 
         .filter-btn {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border: 2px solid #ddd;
             background: white;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 0.95em;
         }
 
         .filter-btn.active {
@@ -130,19 +104,19 @@
         }
 
         .tasks-container {
-            padding: 20px;
+            padding: 20px 30px;
             max-height: 500px;
             overflow-y: auto;
         }
 
         .task-item {
             background: #f8f9fa;
-            padding: 15px;
-            margin-bottom: 10px;
+            padding: 18px;
+            margin-bottom: 12px;
             border-radius: 8px;
             display: flex;
-            align-items: center;
-            gap: 12px;
+            align-items: flex-start;
+            gap: 15px;
             transition: all 0.3s;
             animation: slideIn 0.3s ease;
         }
@@ -150,11 +124,11 @@
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
         }
 
@@ -165,6 +139,7 @@
 
         .task-item.completed {
             opacity: 0.6;
+            background: #e9ecef;
         }
 
         .task-item.completed .task-text {
@@ -173,117 +148,117 @@
         }
 
         .checkbox {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             cursor: pointer;
             accent-color: #667eea;
+            margin-top: 2px;
+        }
+
+        .task-content {
+            flex: 1;
         }
 
         .task-text {
-            flex: 1;
-            font-size: 1em;
+            font-size: 1.05em;
+            color: #333;
+            margin-bottom: 5px;
             word-break: break-word;
         }
 
-        .task-text.editing {
-            border: 2px solid #667eea;
-            padding: 5px;
+        .task-meta {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 3px 8px;
             border-radius: 4px;
-            outline: none;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-right: 8px;
         }
 
-        .task-actions {
-            display: flex;
-            gap: 8px;
+        .priority-high {
+            background: #ffebee;
+            color: #c62828;
         }
 
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.2s;
+        .priority-medium {
+            background: #fff3e0;
+            color: #ef6c00;
         }
 
-        .edit-btn {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .delete-btn {
-            background: #f44336;
-            color: white;
-        }
-
-        .save-btn {
-            background: #2196F3;
-            color: white;
-        }
-
-        .cancel-btn {
-            background: #9e9e9e;
-            color: white;
-        }
-
-        .btn:hover {
-            opacity: 0.8;
-            transform: scale(1.05);
+        .priority-low {
+            background: #e8f5e9;
+            color: #2e7d32;
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px;
+            padding: 60px 20px;
             color: #999;
         }
 
         .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 15px;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
             opacity: 0.3;
         }
 
-        .clear-all {
-            padding: 15px 25px;
-            margin: 20px;
-            background: #f44336;
-            color: white;
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .actions {
+            padding: 20px 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            width: calc(100% - 40px);
-            font-size: 1em;
+            font-size: 0.95em;
             transition: all 0.3s;
         }
 
-        .clear-all:hover {
-            background: #da190b;
+        .refresh-btn {
+            background: #2196F3;
+            color: white;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #667eea;
+        .clear-btn {
+            background: #f44336;
+            color: white;
         }
 
-        .loading::after {
-            content: '...';
-            animation: dots 1.5s steps(4, end) infinite;
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            margin: 20px 30px;
+            border-radius: 8px;
+            border-left: 4px solid #c62828;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📝 My Tasks</h1>
-            <div class="sync-status" id="syncStatus">🔄 Syncing...</div>
+            <h1>📋 My Todo Tasks</h1>
+            <p>Edit tasks.txt file to manage your tasks</p>
             <div class="stats">
                 <span>Total: <strong id="totalTasks">0</strong></span>
                 <span>Active: <strong id="activeTasks">0</strong></span>
@@ -291,104 +266,103 @@
             </div>
         </div>
 
-        <div class="add-task">
-            <div class="input-group">
-                <input type="text" id="taskInput" placeholder="What needs to be done?" />
-                <button id="addBtn">Add Task</button>
-            </div>
-            <div class="filters">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="active">Active</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
-            </div>
+        <div class="info-banner">
+            <h3>📝 How to add/edit tasks:</h3>
+            <p>1. Edit the <code>tasks.txt</code> file in the same folder as this HTML file</p>
+            <p>2. Write one task per line</p>
+            <p>3. Mark completed tasks with <code>[x]</code> at the start</p>
+            <p>4. Mark priority: <code>!!!</code> = High, <code>!!</code> = Medium, <code>!</code> = Low</p>
+            <p>5. Reload this page or click "Refresh Tasks" to see updates</p>
+            <p><strong>Example:</strong> <code>[x] Buy groceries !!!</code></p>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All Tasks</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
         </div>
 
         <div class="tasks-container" id="tasksContainer">
-            <div class="loading">Loading tasks</div>
+            <div class="empty-state">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                </svg>
+                <h3>Loading tasks...</h3>
+            </div>
         </div>
 
-        <button class="clear-all" id="clearCompleted">Clear Completed Tasks</button>
+        <div class="actions">
+            <button class="action-btn refresh-btn" onclick="loadTasks()">🔄 Refresh Tasks</button>
+            <button class="action-btn clear-btn" onclick="clearCompleted()">✓ Clear Completed</button>
+        </div>
     </div>
 
     <script>
         let tasks = [];
         let currentFilter = 'all';
-        let editingId = null;
-        const STORAGE_KEY = 'user-tasks';
 
-        // Update sync status
-        function updateSyncStatus(status, message) {
-            const statusEl = document.getElementById('syncStatus');
-            statusEl.className = 'sync-status ' + status;
-            
-            const icons = {
-                syncing: '🔄',
-                synced: '✓',
-                error: '⚠️'
-            };
-            
-            statusEl.textContent = `${icons[status]} ${message}`;
-        }
-
-        // Load tasks from cloud storage
+        // Load tasks from tasks.txt file
         async function loadTasks() {
             try {
-                updateSyncStatus('syncing', 'Loading tasks...');
+                const response = await fetch('tasks.txt');
                 
-                const result = await window.storage.get(STORAGE_KEY, true);
-                
-                if (result && result.value) {
-                    tasks = JSON.parse(result.value);
-                } else {
-                    tasks = [];
+                if (!response.ok) {
+                    throw new Error('tasks.txt file not found. Please create it in the same folder.');
                 }
                 
+                const content = await response.text();
+                parseTasks(content);
                 renderTasks();
-                updateSyncStatus('synced', 'Synced across devices');
             } catch (error) {
                 console.error('Error loading tasks:', error);
-                tasks = [];
-                renderTasks();
-                updateSyncStatus('error', 'Failed to load tasks');
+                document.getElementById('tasksContainer').innerHTML = `
+                    <div class="error-message">
+                        <strong>⚠️ Error:</strong> ${error.message}
+                        <br><br>
+                        Please create a <strong>tasks.txt</strong> file in the same folder as this HTML file.
+                    </div>
+                `;
             }
         }
 
-        // Save tasks to cloud storage
-        async function saveTasks() {
-            try {
-                updateSyncStatus('syncing', 'Syncing...');
-                
-                const result = await window.storage.set(STORAGE_KEY, JSON.stringify(tasks), true);
-                
-                if (result) {
-                    updateSyncStatus('synced', 'Synced across devices');
-                } else {
-                    updateSyncStatus('error', 'Sync failed');
-                }
-            } catch (error) {
-                console.error('Error saving tasks:', error);
-                updateSyncStatus('error', 'Sync failed');
-            }
-        }
-
-        // Add new task
-        function addTask() {
-            const input = document.getElementById('taskInput');
-            const text = input.value.trim();
+        // Parse tasks from text content
+        function parseTasks(content) {
+            const lines = content.trim().split('\n').filter(line => line.trim());
             
-            if (text === '') return;
+            tasks = lines.map((line, index) => {
+                let text = line.trim();
+                let completed = false;
+                let priority = 'low';
 
-            const task = {
-                id: Date.now(),
-                text: text,
-                completed: false,
-                createdAt: new Date().toISOString()
-            };
+                // Check for completed marker [x] or [X]
+                if (text.match(/^\[x\]/i)) {
+                    completed = true;
+                    text = text.substring(3).trim();
+                } else if (text.startsWith('[ ]')) {
+                    text = text.substring(3).trim();
+                }
 
-            tasks.unshift(task);
-            input.value = '';
-            saveTasks();
-            renderTasks();
+                // Check for priority markers
+                if (text.includes('!!!')) {
+                    priority = 'high';
+                    text = text.replace(/!!!/g, '').trim();
+                } else if (text.includes('!!')) {
+                    priority = 'medium';
+                    text = text.replace(/!!/g, '').trim();
+                } else if (text.includes('!')) {
+                    priority = 'low';
+                    text = text.replace(/!/g, '').trim();
+                }
+
+                return {
+                    id: Date.now() + index,
+                    text: text,
+                    completed: completed,
+                    priority: priority,
+                    originalLine: line
+                };
+            });
         }
 
         // Toggle task completion
@@ -396,46 +370,22 @@
             const task = tasks.find(t => t.id === id);
             if (task) {
                 task.completed = !task.completed;
-                saveTasks();
                 renderTasks();
             }
-        }
-
-        // Delete task
-        function deleteTask(id) {
-            tasks = tasks.filter(t => t.id !== id);
-            saveTasks();
-            renderTasks();
-        }
-
-        // Start editing task
-        function startEdit(id) {
-            editingId = id;
-            renderTasks();
-        }
-
-        // Save edited task
-        function saveEdit(id, newText) {
-            const task = tasks.find(t => t.id === id);
-            if (task && newText.trim() !== '') {
-                task.text = newText.trim();
-                editingId = null;
-                saveTasks();
-                renderTasks();
-            }
-        }
-
-        // Cancel editing
-        function cancelEdit() {
-            editingId = null;
-            renderTasks();
         }
 
         // Clear completed tasks
         function clearCompleted() {
-            tasks = tasks.filter(t => !t.completed);
-            saveTasks();
-            renderTasks();
+            const completedCount = tasks.filter(t => t.completed).length;
+            if (completedCount === 0) {
+                alert('No completed tasks to clear!');
+                return;
+            }
+            
+            if (confirm(`Clear ${completedCount} completed task(s)?`)) {
+                tasks = tasks.filter(t => !t.completed);
+                renderTasks();
+            }
         }
 
         // Update statistics
@@ -467,45 +417,29 @@
                             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
                             <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
                         </svg>
-                        <p>No tasks ${currentFilter !== 'all' ? currentFilter : 'yet'}. Add one above!</p>
+                        <h3>No ${currentFilter !== 'all' ? currentFilter : ''} tasks</h3>
+                        <p>${tasks.length === 0 ? 'Add tasks to tasks.txt file' : 'Try a different filter'}</p>
                     </div>
                 `;
             } else {
-                container.innerHTML = filteredTasks.map(task => {
-                    const isEditing = editingId === task.id;
-                    
-                    return `
-                        <div class="task-item ${task.completed ? 'completed' : ''}">
-                            <input 
-                                type="checkbox" 
-                                class="checkbox" 
-                                ${task.completed ? 'checked' : ''} 
-                                onchange="toggleTask(${task.id})"
-                                ${isEditing ? 'disabled' : ''}
-                            />
-                            ${isEditing ? `
-                                <input 
-                                    type="text" 
-                                    class="task-text editing" 
-                                    value="${task.text}" 
-                                    id="edit-${task.id}"
-                                    onkeypress="if(event.key==='Enter') saveEdit(${task.id}, this.value)"
-                                />
-                            ` : `
-                                <span class="task-text">${task.text}</span>
-                            `}
-                            <div class="task-actions">
-                                ${isEditing ? `
-                                    <button class="btn save-btn" onclick="saveEdit(${task.id}, document.getElementById('edit-${task.id}').value)">Save</button>
-                                    <button class="btn cancel-btn" onclick="cancelEdit()">Cancel</button>
-                                ` : `
-                                    <button class="btn edit-btn" onclick="startEdit(${task.id})">Edit</button>
-                                    <button class="btn delete-btn" onclick="deleteTask(${task.id})">Delete</button>
-                                `}
+                container.innerHTML = filteredTasks.map(task => `
+                    <div class="task-item ${task.completed ? 'completed' : ''}">
+                        <input 
+                            type="checkbox" 
+                            class="checkbox" 
+                            ${task.completed ? 'checked' : ''} 
+                            onchange="toggleTask(${task.id})"
+                        />
+                        <div class="task-content">
+                            <div class="task-text">${task.text}</div>
+                            <div class="task-meta">
+                                <span class="priority-badge priority-${task.priority}">
+                                    ${task.priority.toUpperCase()}
+                                </span>
                             </div>
                         </div>
-                    `;
-                }).join('');
+                    </div>
+                `).join('');
             }
 
             updateStats();
@@ -521,33 +455,11 @@
             });
         });
 
-        // Event listeners
-        document.getElementById('addBtn').addEventListener('click', addTask);
-        document.getElementById('taskInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') addTask();
-        });
-        document.getElementById('clearCompleted').addEventListener('click', clearCompleted);
-
-        // Auto-sync every 30 seconds to check for updates from other devices
-        setInterval(async () => {
-            try {
-                const result = await window.storage.get(STORAGE_KEY, true);
-                if (result && result.value) {
-                    const cloudTasks = JSON.parse(result.value);
-                    // Only update if cloud data is different
-                    if (JSON.stringify(cloudTasks) !== JSON.stringify(tasks)) {
-                        tasks = cloudTasks;
-                        renderTasks();
-                        updateSyncStatus('synced', 'Synced from other device');
-                    }
-                }
-            } catch (error) {
-                console.error('Auto-sync error:', error);
-            }
-        }, 30000);
-
-        // Initialize
+        // Load tasks on page load
         loadTasks();
+
+        // Auto-refresh every 5 seconds to pick up file changes
+        setInterval(loadTasks, 5000);
     </script>
 </body>
 </html>
